@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-root',
@@ -6,5 +9,48 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'gituserprofile';
+  username = "";
+  data: any;
+  localdata: any;
+  spinner = false;
+  title = 'GitUserProfile';
+  constructor(private http: HttpClient, private _snackBar: MatSnackBar) { }
+  searchUser() {
+
+    if (this.username) {
+      this.spinner = true;
+      this.localdata = localStorage.getItem(this.username);
+
+      if (!this.localdata) {
+        this.http.get('https://api.github.com/users/' + this.username + '?access_token=beba3c150021bfb49769385927dfa59fac2cdf04')
+          .subscribe(Response => {
+            this.spinner = false;
+            this.data = Response;
+            console.log(this.data);
+            console.log(JSON.stringify(this.data));
+            localStorage.setItem(this.username, JSON.stringify(this.data));
+          }, error => {
+            this.spinner = false;
+            this.data = "";
+            this.openSnackBar(`Invalid User name`, 'ok');
+          });
+      } else {
+        this.data = JSON.parse(this.localdata);
+        this.spinner = false;
+        console.log(this.data)
+      }
+    } else {
+      this.data = "";
+      this.openSnackBar(`No data`, 'ok');
+    }
+  }
+  openSnackBar(message, action) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
+       verticalPosition:'top',
+      horizontalPosition: 'right',
+    });
+  }
 }
+
+
