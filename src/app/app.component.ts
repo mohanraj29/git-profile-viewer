@@ -22,7 +22,7 @@ export class AppComponent {
       this.localdata = localStorage.getItem(this.username);
 
       if (!this.localdata) {
-        this.http.get('https://api.github.com/users/' + this.username + '?access_token=b365a6b512979e15cd40a91f6deac23494')
+        this.http.get('https://api.github.com/users/' + this.username)
           .subscribe(Response => {
             this.spinner = false;
             this.data = Response;

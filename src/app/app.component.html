@@ -3,7 +3,7 @@
 
   <div class="body">
 
-    <input placeholder="Git username" [(ngModel)]="username" value=""><br>
+    <input placeholder="Git username" [(ngModel)]="username" value="" (keyup.enter)=searchUser()><br>
 
     <button mat-raised-button color="primary" (click)=searchUser()>Find me! <i class="material-icons">search</i></button>
 
